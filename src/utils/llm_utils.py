@@ -39,7 +39,7 @@ def create_input_message(user_input: str) -> dict:
 
     {format_instructions}
 
-    Respond with only the JSON object. No additional text, please.
+    Respond with only the single JSON object. Don't add any additional text. Stop after providing the answer. End of response. Response:
     """
 
     # Generate the prompt

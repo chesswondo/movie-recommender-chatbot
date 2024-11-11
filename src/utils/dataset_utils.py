@@ -1,6 +1,6 @@
 import pandas as pd
 
-def filter_dataframe(df, year="-1", genre="-1"):
+def filter_dataframe(df: pd.DataFrame, year: str="-1", genre: str="-1"):
     # Parse year and genre inputs, handling "-1" as a special case to ignore the filter
     year_filter = set(year.split(", ")) if year != "-1" else None
     genre_filter = set(genre.lower().split(", ")) if genre != "-1" else None
@@ -16,4 +16,6 @@ def filter_dataframe(df, year="-1", genre="-1"):
         (df['genres'].apply(genre_match))
     ]
     
-    return filtered_df
+    if not filtered_df.empty: 
+        return filtered_df
+    return df
