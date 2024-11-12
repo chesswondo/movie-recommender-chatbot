@@ -8,9 +8,9 @@ class CustomLLM:
                  model_name: str,
                  cache_dir: str,
                  max_new_tokens: int,
-                 device: str,
                  task: str,
-                 allow_download: bool=False) -> None:
+                 allow_download: bool,
+                 load_in_8bit: bool) -> None:
         
         # Check folder path
         if not allow_download and not os.path.exists(cache_dir):
@@ -20,14 +20,13 @@ class CustomLLM:
         
         # Specify the local folder for the model weights and device for the model to run on
         self._cache_dir = cache_dir
-        self._device = device
 
         # Use specified model and define the local cache directory
         self._tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir, token=True)
-        self._model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, token=True).to(device)
+        self._model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, token=True, device_map="auto", load_in_8bit=load_in_8bit)
 
         # Create a text generation pipeline
-        self._pipe = pipeline(task, model=self._model, tokenizer=self._tokenizer, max_new_tokens=max_new_tokens, device=device)
+        self._pipe = pipeline(task, model=self._model, tokenizer=self._tokenizer, max_new_tokens=max_new_tokens)
         self._hf = HuggingFacePipeline(pipeline=self._pipe)
 
     def __call__(self,

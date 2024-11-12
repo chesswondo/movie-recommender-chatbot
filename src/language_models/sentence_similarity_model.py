@@ -6,7 +6,7 @@ class EmbeddingModel:
                  model_name: str,
                  cache_dir: str,
                  device: str,
-                 allow_download: bool=False) -> None:
+                 allow_download: bool) -> None:
         
         # Check folder path
         if not allow_download and not os.path.exists(cache_dir):

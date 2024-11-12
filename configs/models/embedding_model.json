@@ -1,0 +1,6 @@
+{
+    "model_path": "models/all-mpnet-base-v2",
+    "model_name": "all-mpnet-base-v2",
+    "device": "cpu",
+    "allow_download": false
+}

@@ -22,8 +22,7 @@ def create_input_message(user_input: str) -> dict:
     description_schema = ResponseSchema(
         name="description",
         description="Extract the description of the film that the author of the text wants to watch. \
-            Don't mention any years and genres. Also make your output as short as you can. \
-                If there is no description besides years and genres, just output -1, don't make it up."
+            Don't mention any years. If there is no description besides years, just output -1, don't make it up."
     )
 
     # Create StructuredOutputParser
