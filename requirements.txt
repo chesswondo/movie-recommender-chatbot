@@ -1,0 +1,7 @@
+transformers==4.46.2
+langchain_huggingface==0.1.2
+pandas==2.2.3
+langchain==0.3.7
+hnswlib==0.8.0
+accelerate>=0.26.0
+bitsandbytes==0.44.1
