@@ -14,7 +14,7 @@ If you want to use an another model, don't forget to recalculate all embeddings 
 
 ### Note:
 
-**The chatbot is a bit raw at the moment, but is actively developing. There are plans to make major changes.**
+**The chatbot is a bit raw at the moment, but is being actively developed. There are plans to make major changes.**
 
 ## Installation
 #### 1. Clone the repository:
