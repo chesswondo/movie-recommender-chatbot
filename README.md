@@ -21,7 +21,7 @@ If you want to use an another model, don't forget to recalculate all embeddings 
 ```bash
 git clone https://github.com/chesswondo/movie-recommender-chatbot
 ```
-Then navigate to src folder and don't forget to set pythonpath at it to use the modules.
+Then navigate to "src" folder and don't forget to set pythonpath at it to use the modules.
 
 #### 2. _[Install PyTorch](https://pytorch.org/)_ in your virtual environment according to your system.
 [![link](assets/readme_images/pytorch_installation.jpg)](https://pytorch.org)
@@ -31,8 +31,24 @@ Then navigate to src folder and don't forget to set pythonpath at it to use the 
 pip install -r requirements.txt
 ```
 
-## Run
-To use the program, you can just run the next script:
+## Calculating embeddings
+Before using the program you may need to calculate embeddings for the dataset. Here is the script for doing it in "scripts" folder. So first navigate to it.
+Then you can use the next script:
+```bash
+python embeddings_retriever.py \
+  <option> --input_file
+  <option> --output_file
+  <option> --device
+```
+
+Here you can change these flags if you want to select your custom .csv dataset file or store the embeddings under the different .pkl path.
+However, the program will work correctly if you simply run the script as follows:
+```bash
+python embeddings_retriever.py
+```
+
+## Usage
+To use the program, you can then just navigate the "src" folder and run the next script:
 ```bash
 python main.py
 ```
