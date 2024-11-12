@@ -21,6 +21,7 @@ If you want to use an another model, don't forget to recalculate all embeddings 
 ```bash
 git clone https://github.com/chesswondo/movie-recommender-chatbot
 ```
+Then navigate to src folder and don't forget to set pythonpath at it to use the modules.
 
 #### 2. _[Install PyTorch](https://pytorch.org/)_ in your virtual environment according to your system.
 [![link](assets/readme_images/pytorch_installation.jpg)](https://pytorch.org)
@@ -31,7 +32,7 @@ pip install -r requirements.txt
 ```
 
 ## Run
-To use the program, first navigate to project's directory, src folder. Then you can just use the next script:
+To use the program, you can just run the next script:
 ```bash
 python main.py
 ```
