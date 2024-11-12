@@ -1,4 +1,4 @@
 {
-    "dataset_path": "data/IMDB_embeddings.pkl",
+    "dataset_path": "../data/IMDB_embeddings.pkl",
     "n_movies_to_select": 5
 }

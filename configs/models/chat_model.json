@@ -1,5 +1,5 @@
 {
-    "model_path": "models/Phi-3.5-mini-instruct",
+    "model_path": "../models/Phi-3.5-mini-instruct",
     "model_name": "microsoft/Phi-3.5-mini-instruct",
     "task": "text-generation",
     "max_new_tokens": 128,

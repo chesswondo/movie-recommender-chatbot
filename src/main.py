@@ -57,9 +57,9 @@ Then, based on it, suggest only the best movie from the following list and very 
 
 def main():
     # Load configuration files
-    main_config = load_config("configs/main.json")
-    chat_model_config = load_config("configs/models/chat_model.json")
-    embedding_model_config = load_config("configs/models/embedding_model.json")
+    main_config = load_config("../configs/main.json")
+    chat_model_config = load_config("../configs/models/chat_model.json")
+    embedding_model_config = load_config("../configs/models/embedding_model.json")
 
     # Initialize text generation model
     chat_model = CustomLLM(model_name=chat_model_config["model_name"],
