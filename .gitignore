@@ -1,3 +1,5 @@
 /models
-/data
 /notebooks
+
+data/*
+!data/IMDB_cleaned.csv
