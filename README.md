@@ -23,6 +23,7 @@ git clone https://github.com/chesswondo/movie-recommender-chatbot
 ```
 
 #### 2. _[Install PyTorch](https://pytorch.org/)_ in your virtual environment according to your system.
+[![link](assets/readme_images/pytorch_installation.jpg)](https://pytorch.org)
 
 #### 3. Install the rest of the dependencies:
 ```bash
@@ -30,7 +31,11 @@ pip install -r requirements.txt
 ```
 
 ## Run
-To use the program, first navigate to project's directory, src folder. Then you can use the next script:
+To use the program, first navigate to project's directory, src folder. Then you can just use the next script:
 ```bash
 python main.py
 ```
+
+**Here is an example of how it should look like:**
+
+![chat_example](assets/readme_images/chat_example.png)
