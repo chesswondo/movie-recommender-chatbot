@@ -52,7 +52,3 @@ To use the program, you can then just navigate to the "src" folder and run the n
 ```bash
 python main.py
 ```
-
-**Here is an example of how it should look like:**
-
-![chat_example](assets/readme_images/chat_example.png)
