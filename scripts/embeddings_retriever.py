@@ -48,9 +48,6 @@ def main():
     parser.add_argument(
         "--device", help="Device for running the sentence transformer model", required=False, default=-1, dest="device"
     )
-    parser.add_argument(
-        "--allow_download", help="Allow to download model weights", required=False, default=True, dest="allow_download"
-    )
 
     # Load configs
     embedding_model_config = load_config("../configs/models/embedding_model.json")

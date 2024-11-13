@@ -48,7 +48,7 @@ python embeddings_retriever.py
 ```
 
 ## Usage
-To use the program, you can then just navigate the "src" folder and run the next script:
+To use the program, you can then just navigate to the "src" folder and run the next script:
 ```bash
 python main.py
 ```
