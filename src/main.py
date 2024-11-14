@@ -13,6 +13,16 @@ def generate_base_response(user_input: str,
                            main_config: dict,
                            chat_model: CustomLLM,
                            embedding_model: EmbeddingModel) -> str:
+    """
+    Generates the response from the chatbot based on given user input.
+
+    : param user_input: (str) - given user input.
+    : param main_config: (dict) - main configuration file.
+    : param chat_model: (CustomLLM) - main text generation model, an instance of CustomLLM.
+    : param embedding_model: (EmbeddingModel) - main sentence transformer model, an instance of EmbeddingModel.
+
+    : return: (str) - final chatbot response
+    """
 
     input_message = create_input_message(user_input=user_input)
     messages = input_message['messages']

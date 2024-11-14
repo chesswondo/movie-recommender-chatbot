@@ -7,6 +7,16 @@ def calculate_embeddings(input_data_path: str,
                          output_data_path: str,
                          embedding_model_config: dict,
                          device: str) -> None:
+    """
+    Calculates embeddings for given movie dataset.
+
+    : param input_data_path: (str) - path to the input .csv file.
+    : param output_data_path: (str) - path to the output .pkl file.
+    : param embedding_model_config: (dict) - configuration file for the sentence transformer model.
+    : param device: (str) - device to calculate embeddings on.
+
+    : return: (None) - this function does not return any value.
+    """
 
     try:
         movie_df = pd.read_csv(input_data_path)

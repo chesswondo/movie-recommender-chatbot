@@ -1,6 +1,18 @@
 import pandas as pd
 
-def filter_dataframe(df: pd.DataFrame, year: str="-1", genre: str="-1"):
+def filter_dataframe(df: pd.DataFrame,
+                     year: str="-1",
+                     genre: str="-1") -> pd.DataFrame:
+    """
+    Filters the dataframe based on given filters.
+
+    : param df: (pd.DataFrame) - given pandas dataframe.
+    : param year: (str) - years to select separated by commas (if -1 then there are no years).
+    : param genre: (str) - genres to select separated by commas (if -1 then there are no genres).
+
+    : return: (pd.DataFrame) - filtered pandas dataframe.
+    """
+
     # Parse year and genre inputs, handling "-1" as a special case to ignore the filter
     year_filter = set(year.split(", ")) if year != "-1" else None
     genre_filter = set(genre.lower().split(", ")) if genre != "-1" else None

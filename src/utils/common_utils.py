@@ -1,7 +1,19 @@
 import torch
 import json
 
-def extract_between(text: str, start: str, end: str) -> str:
+def extract_between(text: str,
+                    start: str,
+                    end: str) -> str:
+    """
+    Extracts text between two substrings.
+
+    : param text: (str) - given full text.
+    : param start: (str) - substring from which to start.
+    : param end: (str) - sunstring before which to end.
+
+    : return: (str) - text between two given sunstrings.
+    """
+
     # Find the start and end positions
     start_idx = text.find(start) + len(start)
     end_idx = text.find(end, start_idx)
@@ -13,6 +25,13 @@ def extract_between(text: str, start: str, end: str) -> str:
         return text
     
 def set_device(device: str) -> str:
+    """
+    Sets device type based on given input and system parameters.
+
+    : param device: (str) - input device value.
+    
+    : return: (str) - final device type (cpu or cuda).
+    """
     if torch.cuda.is_available():
         return device
     return "cpu"
