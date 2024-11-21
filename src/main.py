@@ -50,6 +50,8 @@ def generate_base_response(user_input: str,
                                     top_n=main_config["n_movies_to_select"])
     
     print("Top movies selected successfully!")
+    print(type(selected_movies))
+    print("Selected movies:", selected_movies)
 
     # Generate final response to user
     # Construct the prompt with retrieved movies

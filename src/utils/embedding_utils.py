@@ -6,7 +6,17 @@ from language_models.sentence_similarity_model import EmbeddingModel
 def select_movies(movie_df: pd.DataFrame,
                   embedding_model: EmbeddingModel,
                   user_input: str,
-                  top_n: int):
+                  top_n: int) -> pd.DataFrame:
+    """
+    Selects top_n movies from given dataframe most close to the text input.
+
+    : param movie_df: (pd.DataFrame) - given pandas dataframe.
+    : param embedding_model: (EmbeddingModel) - model for calculating embeddings.
+    : param user_input: (str) - text description to compare with.
+    : param top_n: (int) - how many movies to select.
+
+    : return: (pd.DataFrame) - top_n selected movies from initial dataset.
+    """
 
     movie_embeddings = np.vstack(movie_df['embeddings'].values)
 
