@@ -4,5 +4,5 @@
     "task": "text-generation",
     "max_new_tokens": 128,
     "allow_download": true,
-    "load_in_8bit": false
+    "load_in_8bit": true
 }
