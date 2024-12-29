@@ -1,7 +1,12 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+from transformers.agents.llm_engine import MessageRole, get_clean_message_list
 from langchain_huggingface import HuggingFacePipeline
 from typing import Any
 import os
+
+role_conversions = {
+    MessageRole.TOOL_RESPONSE: MessageRole.USER,
+}
 
 class CustomLLM:
     """Class for working with LLMs from Hugging Face."""
@@ -25,7 +30,6 @@ class CustomLLM:
 
         : return: (None) - this function does not return any value.
         """
-        
         # Check folder path
         if not allow_download and not os.path.exists(cache_dir):
             print(os.path.abspath(cache_dir))
@@ -41,12 +45,15 @@ class CustomLLM:
         self._hf = HuggingFacePipeline(pipeline=self._pipe)
 
     def __call__(self,
-                 messages: Any) -> str:
+                 messages: Any,
+                 **kwargs) -> str:
         """Call function for CustomLLM.
 
         : param messages: (Any) - input messages.
         
-        : return: (str) - model response.
+        : return: (str) - processed model response.
         """
+        messages = get_clean_message_list(message_list=messages, role_conversions=role_conversions)
         
-        return self._hf.invoke(messages)
+        # Generate the response using HuggingFacePipeline
+        return self._hf.invoke(messages, **kwargs)

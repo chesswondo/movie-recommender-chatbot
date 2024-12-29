@@ -3,3 +3,5 @@
 
 data/*
 !data/IMDB_cleaned.csv
+
+src/start.bat
