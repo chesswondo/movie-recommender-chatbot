@@ -1,5 +1,6 @@
 from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 from langchain.prompts import PromptTemplate
+from transformers.agents import ReactJsonAgent
 import re
 from typing import Any
 
@@ -71,3 +72,16 @@ def retrieve_json(model_response: str,
         print(f"Raw response received: {model_response}")
 
     return response
+
+
+def base_agent_run(user_input: str,
+                   agent: ReactJsonAgent) -> str:
+    """
+    Runs the agent on the user input string.
+
+    : param user_input: (str) - given user input.
+    : param agent: (ReactJsonAgent) - an agent with tools and llm.
+
+    : return: (str) - agent's response.
+    """
+    return agent.run(user_input)
