@@ -1,4 +1,5 @@
 {
     "dataset_path": "../data/IMDB_embeddings.pkl",
-    "n_movies_to_select": 5
+    "n_movies_to_select": 5,
+    "run_as_telegram_bot": true
 }
