@@ -59,18 +59,25 @@ def main():
     # Run telegram bot or local window UI
     if main_config["run_as_telegram_bot"]:
         
-        # Specify the path to the .env file
+        # Specify the path to the .env file and extract its content
         load_dotenv(dotenv_path="../configs/.env")
         API_TOKEN = os.getenv("TELEGRAM_API_TOKEN")
+        WEBHOOK_URL = os.getenv("TELEGRAM_WEBHOOK_URL")
 
+        # Build the telegram bot
         telegram_bot = Telegram(generate_answer=agent_run)
-
         application = Application.builder().token(API_TOKEN).build()
         application.add_handler(CommandHandler('start', telegram_bot.start))
         application.add_handler(CommandHandler('help', telegram_bot.help_command))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, telegram_bot.handle_text))
 
-        application.run_polling()
+        # Configure webhook
+        application.run_webhook(
+            listen="0.0.0.0",
+            port=8443,
+            url_path=f"{API_TOKEN}",
+            webhook_url=f"{WEBHOOK_URL}/{API_TOKEN}"
+        )
 
     else:
         root = tk.Tk()
