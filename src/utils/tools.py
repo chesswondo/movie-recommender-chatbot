@@ -2,24 +2,24 @@ import pandas as pd
 from transformers.agents import Tool
 from language_models.sentence_similarity_model import EmbeddingModel
 from utils.embedding_utils import select_movies
-import json
+from language_models.text_generation_llm import CustomLLM
 
 class MovieRetrieverTool(Tool):
     name = "movie_retriever"
-    description = (
-        "It always must be used when user asks for a movie to watch. Retrieves some movies from the IMDB database that have the closest embeddings to the input query."
-    )
+    description = "It always must be used when user asks for a movie to watch. Retrieves some movies from the IMDB database that have the closest embeddings to the input query."
     inputs = {
         "query": {
             "type": "string",
-            "description": "The query to perform. This should be semantically close to your target movies descriptions. Use the affirmative form rather than a question.",
-        }},
+            "description": "The query to perform. It should only contain information from user's query and be semantically close to your target movies descriptions. \
+Use the affirmative form rather than a question."
+        }}
     output_type = "string"
 
     def __init__(self, movie_db: pd.DataFrame,
                  embedding_model: EmbeddingModel,
-                 top_n: int) -> None:
+                 top_n: int, **kwargs) -> None:
         
+        super().__init__(**kwargs)
         self._movie_db = movie_db
         self._embedding_model = embedding_model
         self._top_n = top_n
@@ -37,34 +37,35 @@ class MovieRetrieverTool(Tool):
         movie_summaries = "\n\n".join([f"{row['title']}: {row['overview']}" for _, row in movies.iterrows()])
         return movie_summaries
     
+
 class PostprocessingTool(Tool):
     name = "movie_postprocessing"
-    description = (
-        "Selects the most appropriate movie from a list with descriptions retrieved by the movie_retriever tool. \
-        Takes the retrieved movies with their descriptions and user query as input and outputs a single selected movie. Always used after getting a list of movies."
-    )
+    description = "Selects the most appropriate movie from a list with descriptions retrieved by the movie_retriever tool. \
+Takes the retrieved movies with their descriptions and user query as input and outputs a single selected movie. Always use it when you have a list of possible movies."
 
     inputs = {
         "user_query": {
             "type": "string",
-            "description": "The query to perform. It must be a single string and be semantically close to the target movies descriptions. \
-                Use the affirmative form rather than a question.",
+            "description": "The query to perform. It should only contain information from user's query, must be a single string and be \
+semantically close to the target movies descriptions. Use the affirmative form rather than a question."
         },
         "retrieved_movies": {
             "type": "string",
             "description": "It must be a single string which contains a list of retrieved movies and their descriptions. \
-            After every movie it MUST be a brief description of what happens in this movie. \
-            This string should not contain any additional information. Do not use your own observations, use only information from the tool you've got before."
-        }},
+After every movie it MUST be a brief description of what happens in this movie. \
+This string should not contain any additional information. Do not use your own observations, use only information from the tool you've got before."
+        }}
     output_type = "string"
     
-    def __init__(self, prompt_template: str):
+    def __init__(self, prompt_template: str, llm_engine: CustomLLM, **kwargs) -> None:
         """
         Initializes the postprocessing tool with a template.
 
         :param prompt_template: (str) - Template for the final prompt.
         """
+        super().__init__(**kwargs)
         self._template = prompt_template
+        self._llm_engine = llm_engine
 
     def forward(self, user_query: str, retrieved_movies: str) -> str:
         """
@@ -76,5 +77,6 @@ class PostprocessingTool(Tool):
         :return: (str) - The final formatted response.
         """
         print("\nMOVIE POSTPROCESSING CALLED\n")
-        final_response = self._template.format(retrieved_info=retrieved_movies, user_query=user_query)
-        return json.dumps({"final_response": final_response})
+        final_response = self._template.format(retrieved_movies=retrieved_movies, user_query=user_query)
+        return self._llm_engine(final_response)
+    

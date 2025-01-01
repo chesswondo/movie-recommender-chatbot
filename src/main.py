@@ -5,7 +5,7 @@ from utils.tools import MovieRetrieverTool, PostprocessingTool
 from utils.common_utils import load_config, set_device
 from utils.llm_utils import base_agent_run
 from interface.window import ChatWindow
-from transformers.agents import ReactJsonAgent
+from transformers import ReactCodeAgent
 from telegram.ext import CommandHandler, MessageHandler, filters, Application
 import pandas as pd
 import tkinter as tk
@@ -20,12 +20,7 @@ def main():
     embedding_model_config = load_config("../configs/models/embedding_model.json")
 
     # Initialize text generation model
-    chat_model = CustomLLM(model_name=chat_model_config["model_name"],
-                           cache_dir=chat_model_config["model_path"],
-                           max_new_tokens=chat_model_config["max_new_tokens"],
-                           task=chat_model_config["task"],
-                           allow_download=chat_model_config["allow_download"],
-                           load_in_8bit=chat_model_config["load_in_8bit"])
+    chat_model = CustomLLM(model_name=chat_model_config["model_name"])
     
     print("Chat model initialized!")
     
@@ -46,13 +41,13 @@ def main():
                                               top_n=main_config["n_movies_to_select"])
     
     # Initialize a prompt for movie postprocessing and the corresponding tool
-    prompt = "User query: {user_query}\n\nIn this query, ignore all mentioned years and genres. \
-    Then, based on it, suggest only the best movie from the following list and very briefly describe your choice:\n\n{retrieved_movies}. \
-    \n\nDon't make up queries. Do not add any additional information beyond the short main answer. Write 'End of response' after it. \n\nResponse:"
-    movie_postprocessing_tool = PostprocessingTool(prompt_template=prompt)
-    
+    prompt = "User query: {user_query}\n\nFirst, analyze this query. \
+Then, based on it, suggest the most appropriate movie from the following list and very briefly describe your choice for the user:\n\n{retrieved_movies}. \
+\n\nDon't dublicate the user's query, respond in a polite tone, keeping the conversation going, and in the end ask if there is anything else needed.\n\nResponse:"
+    movie_postprocessing_tool = PostprocessingTool(prompt_template=prompt, llm_engine=chat_model)
+
     # Initialize the main agent and a corresponding running function
-    agent = ReactJsonAgent(tools=[movie_retriever_tool, movie_postprocessing_tool], llm_engine=chat_model, verbose=0)
+    agent = ReactCodeAgent(tools=[movie_retriever_tool, movie_postprocessing_tool], llm_engine=chat_model, verbose=2)
     agent_run = partial(base_agent_run,
                         agent=agent)
     

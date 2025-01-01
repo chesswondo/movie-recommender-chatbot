@@ -1,59 +1,44 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from transformers.agents.llm_engine import MessageRole, get_clean_message_list
-from langchain_huggingface import HuggingFacePipeline
+from transformers.agents.llm_engine import HfApiEngine
 from typing import Any
-import os
 
 role_conversions = {
     MessageRole.TOOL_RESPONSE: MessageRole.USER,
 }
 
 class CustomLLM:
-    """Class for working with LLMs from Hugging Face."""
+    """Class for working with LLMs using Hugging Face API."""
     
     def __init__(self,
-                 model_name: str,
-                 cache_dir: str,
-                 max_new_tokens: int,
-                 task: str,
-                 allow_download: bool,
-                 load_in_8bit: bool) -> None:
+                 model_name: str) -> None:
         """
         Initializes an instance of CustomLLM.
 
         : param model_name: (str) - name of the language model.
-        : param cache_dir: (str) - path to the directory where to store model weights.
-        : param max_new_tokens: (int) - max number of tokens to generate.
-        : param task: (str) - task for the model (like 'text-generation').
-        : param allow_download: (bool) - whether to download model weights if they are not available locally.
-        : param load_in_8bit: (bool) - whether to apply 8-bit quantization for saving resources.
 
         : return: (None) - this function does not return any value.
-        """
-        # Check folder path
-        if not allow_download and not os.path.exists(cache_dir):
-            print(os.path.abspath(cache_dir))
-            raise ValueError("Folder with model weights doesn't exist. \
-                             Check specified folder path or change allow_download argument to True")
-        
-        # Use specified model and define the local cache directory
-        self._tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir, token=True)
-        self._model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, token=True, device_map="auto", load_in_8bit=load_in_8bit)
-
-        # Create a text generation pipeline
-        self._pipe = pipeline(task, model=self._model, tokenizer=self._tokenizer, max_new_tokens=max_new_tokens)
-        self._hf = HuggingFacePipeline(pipeline=self._pipe)
+        """        
+        self._hf_api_engine = HfApiEngine(model=model_name)
 
     def __call__(self,
                  messages: Any,
+                 stop_sequences: list = [],
                  **kwargs) -> str:
-        """Call function for CustomLLM.
+        """
+        Call function for CustomLLM.
 
         : param messages: (Any) - input messages.
+        : param stop_sequences: (list) - list of stop sequences for generation.
+        : param kwargs: (dict) - additional arguments for generation.
         
         : return: (str) - processed model response.
         """
-        messages = get_clean_message_list(message_list=messages, role_conversions=role_conversions)
+        if type(messages) is not str:
+            messages = get_clean_message_list(message_list=messages, role_conversions=role_conversions)
         
-        # Generate the response using HuggingFacePipeline
-        return self._hf.invoke(messages, **kwargs)
+        else:
+            messages = [{"role": "user", "content": messages}]
+        
+        # Use HfApiEngine to handle the request
+        return self._hf_api_engine(messages, stop_sequences=stop_sequences, **kwargs)
+
