@@ -6,6 +6,7 @@ from utils.common_utils import load_config, set_device
 from utils.llm_utils import base_agent_run
 from interface.window import ChatWindow
 from transformers import ReactCodeAgent
+from transformers import ManagedAgent
 from telegram.ext import CommandHandler, MessageHandler, filters, Application
 import pandas as pd
 import tkinter as tk
@@ -47,7 +48,15 @@ Then, based on it, suggest the most appropriate movie from the following list an
     movie_postprocessing_tool = PostprocessingTool(prompt_template=prompt, llm_engine=chat_model)
 
     # Initialize the main agent and a corresponding running function
-    agent = ReactCodeAgent(tools=[movie_retriever_tool, movie_postprocessing_tool], llm_engine=chat_model, verbose=2)
+    react_agent = ReactCodeAgent(tools=[movie_retriever_tool, movie_postprocessing_tool], llm_engine=chat_model, verbose=2)
+    agent = ManagedAgent(agent=react_agent,
+                         name="AI Bot",
+                         description="A helpful agent which can both recommend a movie or just speak about literally everything.",
+                         additional_prompting="If you suggest user a movie, use appropriate tools and at the end always briefly describe your choice. \
+Keep conversation going, answer in polite tone, at the end ask if something else needed. \
+If the user doesn't ask for a movie, always call the final_answer tool, don't make up their queries and search for movies. \
+If you call the final answer tool, give it only the SINGLE STRING as input, not dict. Don't forget to always add 'Code:' before the code for running a tool.")
+    
     agent_run = partial(base_agent_run,
                         agent=agent)
     

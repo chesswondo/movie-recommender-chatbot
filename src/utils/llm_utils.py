@@ -1,13 +1,13 @@
-from transformers import Agent
+from transformers import ManagedAgent
 
 def base_agent_run(user_input: str,
-                   agent: Agent) -> str:
+                   agent: ManagedAgent) -> str:
     """
     Runs the agent on the user input string.
 
     : param user_input: (str) - given user input.
-    : param agent: (Agent) - an agent with tools and llm.
+    : param agent: (ManagedAgent) - an agent with tools and llm.
 
     : return: (str) - agent's response.
     """
-    return agent.run(user_input)
+    return agent(user_input)
