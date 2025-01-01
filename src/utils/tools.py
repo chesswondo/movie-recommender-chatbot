@@ -44,7 +44,7 @@ class PostprocessingTool(Tool):
 Takes the retrieved movies with their descriptions and user query as input and outputs a single selected movie. Always use it when you have a list of possible movies."
 
     inputs = {
-        "user_query": {
+        "query": {
             "type": "string",
             "description": "The query to perform. It should only contain information from user's query, must be a single string and be \
 semantically close to the target movies descriptions. Use the affirmative form rather than a question."
@@ -67,7 +67,7 @@ This string should not contain any additional information. Do not use your own o
         self._template = prompt_template
         self._llm_engine = llm_engine
 
-    def forward(self, user_query: str, retrieved_movies: str) -> str:
+    def forward(self, query: str, retrieved_movies: str) -> str:
         """
         Applies postprocessing to the retrieved information.
 
@@ -77,6 +77,6 @@ This string should not contain any additional information. Do not use your own o
         :return: (str) - The final formatted response.
         """
         print("\nMOVIE POSTPROCESSING CALLED\n")
-        final_response = self._template.format(retrieved_movies=retrieved_movies, user_query=user_query)
+        final_response = self._template.format(retrieved_movies=retrieved_movies, user_query=query)
         return self._llm_engine(final_response)
     

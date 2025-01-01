@@ -54,8 +54,10 @@ Then, based on it, suggest the most appropriate movie from the following list an
                          description="A helpful agent which can both recommend a movie or just speak about literally everything.",
                          additional_prompting="If you suggest user a movie, use appropriate tools and at the end always briefly describe your choice. \
 Keep conversation going, answer in polite tone, at the end ask if something else needed. \
-If the user doesn't ask for a movie, always call the final_answer tool, don't make up their queries and search for movies. \
-If you call the final answer tool, give it only the SINGLE STRING as input, not dict. Don't forget to always add 'Code:' before the code for running a tool.")
+If the user doesn't ask for a movie, always call the 'final_answer' tool, don't search for movies. It's very important. NEVER make up user queries, do ONLY what the user wants.\
+If you call the 'final_answer' tool, give it only the SINGLE STRING as input, not dict. Also you don't have to print here 'task outcome', 'additional context', etc. \
+In 'final_answer' just print your final respond to user in free form, as would human answer. Don't forget to always add 'Code:' before the code for running a tool. \
+NEVER use other tools than those available to you.")
     
     agent_run = partial(base_agent_run,
                         agent=agent)
