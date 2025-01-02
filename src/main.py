@@ -50,7 +50,7 @@ Then, based on it, suggest several most appropriate movies from the following li
     # Initialize the main agent and a corresponding running function
     react_agent = ReactCodeAgent(tools=[movie_retriever_tool, movie_postprocessing_tool], llm_engine=chat_model, verbose=2)
     agent = ManagedAgent(agent=react_agent,
-                         name="AI Bot",
+                         name="AI Agent",
                          description="A helpful agent which can both recommend a movie or just speak about literally everything.",
                          additional_prompting="If you suggest user a movie, use appropriate tools and at the end always briefly describe your choice. \
 Keep conversation going, answer in polite tone, at the end ask if something else needed. \

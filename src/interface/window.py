@@ -16,7 +16,7 @@ class ChatWindow:
         : return: (None) - this function does not return any value.
         """
         self._root = root
-        self._root.title("Movie recommendation chatbot")
+        self._root.title("Movie recommendation agent")
         self._generate_answer = generate_answer
         
         # Create a frame for the text area and scrollbar
@@ -66,6 +66,6 @@ class ChatWindow:
             # Generate and display answer
             answer = self._generate_answer(message).strip()
             self._text_area.config(state=tk.NORMAL)
-            self._text_area.insert(tk.END, "Bot: " + answer + "\n\n\n")
+            self._text_area.insert(tk.END, "Agent: " + answer + "\n\n\n")
             self._text_area.config(state=tk.DISABLED)
             self._text_area.see(tk.END)
