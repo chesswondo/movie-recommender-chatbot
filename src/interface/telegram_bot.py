@@ -9,9 +9,9 @@ class Telegram:
         """
         Initializes an instance of Telegram.
 
-        :param generate_answer: (Callable[[str], str]) - answer generation function which takes string input and returns another string.
+        : param generate_answer: (Callable[[str], str]) - answer generation function which takes string input and returns another string.
 
-        :return: (None) - this function does not return any value.
+        : return: (None) - this function does not return any value.
         """
         self._generate_answer = generate_answer
 
