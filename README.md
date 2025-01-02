@@ -1,13 +1,13 @@
-# Movie Recommender Chatbot
+# Movie Recommender Agent
 
 ## About
-Here is an implementation of a chatbot which can recommend you a movie based on your query.
-You can run this movie recommender bot both as a local window application and as a telegram bot using webhooks.
+Here is an implementation of a an LLM Agent which can recommend you a movie based on your query.
+You can run this movie recommender agent both as a local window application and as a telegram bot using webhooks.
 
 Currently it uses mistralai's [Mistral-Nemo-Instruct-2407](https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407) as a main model for text generation.
 On average it takes less than a minute to get a response using Hugging Face Inference API.
 
-The chatbot currently works as an LLM Agent and can both maintain communication and recommend movies based on your description.
+The agent can both maintain communication and recommend movies based on your description.
 It takes your input, retrieves all important information, then selects some movies
 from Kaggle IMDB dataset using precalculated vector embeddings, analyzes them and finally gives you a short recommendation.
 
@@ -16,7 +16,7 @@ If you want to use an another model, don't forget to recalculate all embeddings 
 
 ### Note:
 
-**The chatbot is a bit raw at the moment, but is being actively developed. There are plans to add chat memory and make some other changes.**
+**The agent is a bit raw at the moment, but is being actively developed. There are plans to add chat memory and make some other changes.**
 
 ## Installation
 #### 1. Clone the repository:
