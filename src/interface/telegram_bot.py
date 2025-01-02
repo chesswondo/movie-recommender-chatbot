@@ -3,8 +3,16 @@ from telegram.ext import ContextTypes
 from typing import Callable
 
 class Telegram:
+    """Class for telegram bot behavior."""
 
     def __init__(self, generate_answer: Callable[[str], str]) -> None:
+        """
+        Initializes an instance of Telegram.
+
+        : param generate_answer: (Callable[[str], str]) - answer generation function which takes string input and returns another string.
+
+        : return: (None) - this function does not return any value.
+        """
         self._generate_answer = generate_answer
 
     # Start command (/start)
@@ -35,13 +43,13 @@ class Telegram:
             context.user_data["processing"] = set()
         context.user_data["processing"].add(user_id)
 
-        # Send the "Let me think about it..." message and store its ID
+        # Send the temporary message and store its ID
         thinking_message = await update.message.reply_text("Let me think about it...")
 
         # Processing
         answer = self._generate_answer(user_input).strip()
 
-        # Delete the "Let me think about it..." message
+        # Delete the temporary message
         await thinking_message.delete()
 
         # Send the final response

@@ -29,7 +29,6 @@ class CustomLLM:
 
         : param messages: (Any) - input messages.
         : param stop_sequences: (list) - list of stop sequences for generation.
-        : param kwargs: (dict) - additional arguments for generation.
         
         : return: (str) - processed model response.
         """

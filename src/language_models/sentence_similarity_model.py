@@ -32,5 +32,11 @@ class EmbeddingModel:
 
     def encode(self,
                input_string: str) -> str:
+        """
+        Calculates embeddings from user input
         
+        : param input_string: (str) - user input.
+        
+        : return: (str) - calculated vector embeddings.
+        """
         return self._embedding_model.encode(input_string)

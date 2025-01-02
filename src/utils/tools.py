@@ -15,17 +15,33 @@ Use the affirmative form rather than a question."
         }}
     output_type = "string"
 
-    def __init__(self, movie_db: pd.DataFrame,
+    def __init__(self,
+                 movie_db: pd.DataFrame,
                  embedding_model: EmbeddingModel,
-                 top_n: int, **kwargs) -> None:
-        
+                 top_n: int,
+                 **kwargs) -> None:
+        """
+        Initializes the movie retriever tool.
+
+        : param movie_db: (pd.DataFrame) - a database with information about different movies.
+        : param embedding_model: (EmbeddingModel) - a sentence similarity model.
+        : param top_n: (int) - number of movies to return.
+
+        : return: (None) - this function does not return any value.
+        """        
         super().__init__(**kwargs)
         self._movie_db = movie_db
         self._embedding_model = embedding_model
         self._top_n = top_n
         
     def forward(self, query: str) -> str:
+        """
+        Retrieves some of the most similar movies to the input query.
 
+        : param query: (str) - an original user query to compare with.
+        
+        : return: (str) - a list of movies with some additional information.
+        """
         print("\nMOVIE RETRIEVER CALLED\n")
         
         assert isinstance(query, str), "Your search query must be a string"
@@ -57,11 +73,17 @@ This string should not contain any additional information. Do not use your own o
         }}
     output_type = "string"
     
-    def __init__(self, prompt_template: str, llm_engine: CustomLLM, **kwargs) -> None:
+    def __init__(self,
+                 prompt_template: str,
+                 llm_engine: CustomLLM,
+                 **kwargs) -> None:
         """
-        Initializes the postprocessing tool with a template.
+        Initializes the postprocessing tool with a prompt.
 
-        :param prompt_template: (str) - Template for the final prompt.
+        : param prompt_template: (str) - a template for the final prompt.
+        : param llm_engine: (CustomLLM) - a language model to apply postprocessing.
+
+        : return: (None) - this function does not return any value.
         """
         super().__init__(**kwargs)
         self._template = prompt_template
@@ -71,12 +93,13 @@ This string should not contain any additional information. Do not use your own o
         """
         Applies postprocessing to the retrieved information.
 
-        :param retrieved_movies: (str) - The raw information retrieved by the tool.
-        :param user_query: (str) - The original user query for context.
+        : param query: (str) - an original user query for context.
+        : param retrieved_movies: (str) - raw information retrieved by the tool.
         
-        :return: (str) - The final formatted response.
+        : return: (str) - a final formatted response.
         """
         print("\nMOVIE POSTPROCESSING CALLED\n")
+
         final_response = self._template.format(retrieved_movies=retrieved_movies, user_query=query)
         return self._llm_engine(final_response)
     
