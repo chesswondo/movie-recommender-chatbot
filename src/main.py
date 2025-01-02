@@ -74,6 +74,9 @@ Make sure the names and types match. If you are really sure, you can run all too
         API_TOKEN = os.getenv("TELEGRAM_API_TOKEN")
         WEBHOOK_URL = os.getenv("TELEGRAM_WEBHOOK_URL")
 
+        # Read the configuration file
+        telegram_config = load_config("../configs/telegram/main.json")
+
         # Build the telegram bot
         telegram_bot = Telegram(generate_answer=agent_run)
         application = Application.builder().token(API_TOKEN).build()
@@ -84,7 +87,7 @@ Make sure the names and types match. If you are really sure, you can run all too
         # Configure webhook
         application.run_webhook(
             listen="0.0.0.0",
-            port=8443,
+            port=telegram_config["port"],
             url_path=f"{API_TOKEN}",
             webhook_url=f"{WEBHOOK_URL}/{API_TOKEN}"
         )
