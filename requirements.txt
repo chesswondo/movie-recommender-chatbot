@@ -5,3 +5,7 @@ langchain==0.3.7
 hnswlib==0.8.0
 accelerate>=0.26.0
 bitsandbytes==0.44.1
+python-telegram-bot==21.9
+python-dotenv==1.0.1
+pyngrok==7.2.2
+tornado==6.4.2
