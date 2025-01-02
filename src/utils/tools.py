@@ -56,8 +56,9 @@ Use the affirmative form rather than a question."
 
 class PostprocessingTool(Tool):
     name = "movie_postprocessing"
-    description = "Selects the most appropriate movie from a list with descriptions retrieved by the movie_retriever tool. \
-Takes the retrieved movies with their descriptions and user query as input and outputs a single selected movie. Always use it when you have a list of possible movies."
+    description = "Selects the most appropriate movies from a list with descriptions retrieved by the movie_retriever tool. \
+Takes the retrieved movies with their descriptions and user query as input and outputs a final recommendation. Always use it when you have a raw list of possible movies. \
+If you decide to use this tool, immediately use its result as an argument in final_answer, do not take intermediate steps."
 
     inputs = {
         "query": {

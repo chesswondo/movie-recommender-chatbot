@@ -9,9 +9,9 @@ class Telegram:
         """
         Initializes an instance of Telegram.
 
-        : param generate_answer: (Callable[[str], str]) - answer generation function which takes string input and returns another string.
+        :param generate_answer: (Callable[[str], str]) - answer generation function which takes string input and returns another string.
 
-        : return: (None) - this function does not return any value.
+        :return: (None) - this function does not return any value.
         """
         self._generate_answer = generate_answer
 
@@ -49,11 +49,17 @@ class Telegram:
         # Processing
         answer = self._generate_answer(user_input).strip()
 
+        # Format the response (convert **text** to *text* for MarkdownV2)
+        formatted_answer = answer.replace("**", "*")
+        
+        # Escape other special characters in MarkdownV2
+        formatted_answer = formatted_answer.replace("_", "\\_").replace("[", "\\[").replace("]", "\\]").replace("(", "\\(").replace(")", "\\)").replace("~", "\\~").replace("`", "\\`").replace(">", "\\>").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("=", "\\=").replace("|", "\\|").replace("{", "\\{").replace("}", "\\}").replace(".", "\\.").replace("!", "\\!")
+
         # Delete the temporary message
         await thinking_message.delete()
 
-        # Send the final response
-        await update.message.reply_text(answer)
+        # Send the final response as MarkdownV2
+        await update.message.reply_text(formatted_answer, parse_mode="MarkdownV2")
 
         # Remove the user from processing
         context.user_data["processing"].remove(user_id)
