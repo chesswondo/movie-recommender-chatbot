@@ -2,19 +2,21 @@
 
 ## About
 Here is an implementation of a chatbot which can recommend you a movie based on your query.
+You can run this movie recommender bot both as a local window application and as a telegram bot using webhooks.
 
-Currently it uses Microsoft's [Phi-3.5-mini-instruct](https://huggingface.co/microsoft/Phi-3.5-mini-instruct) as a main model for text generation.
-On average it takes from 30 seconds to a minute to get a response on a single RTX 4080 using 8-bit quantization.
+Currently it uses mistralai's [Mistral-Nemo-Instruct-2407](https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407) as a main model for text generation.
+On average it takes less than a minute to get a response using Hugging Face Inference API.
 
-Model takes your input, retrieves all important information, such as description, genres and so on, and then selects some movies
-from Kaggle IMDB dataset using RAG (Retrieval Augmented Generation), finally giving you a short recommendation.
+The chatbot currently works as an LLM Agent and can both maintain communication and recommend movies based on your description.
+It takes your input, retrieves all important information, then selects some movies
+from Kaggle IMDB dataset using precalculated vector embeddings, analyzes them and finally gives you a short recommendation.
 
 As a sentence transformer model currently we use [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2).
 If you want to use an another model, don't forget to recalculate all embeddings in the dataset.
 
 ### Note:
 
-**The chatbot is a bit raw at the moment, but is being actively developed. There are plans to make major changes.**
+**The chatbot is a bit raw at the moment, but is being actively developed. There are plans to add chat memory and make some other changes.**
 
 ## Installation
 #### 1. Clone the repository:
@@ -32,7 +34,7 @@ pip install -r requirements.txt
 ```
 
 ## Calculating embeddings
-Before using the program you may need to calculate embeddings for the dataset. Here is the script for doing it in "scripts" folder. So first navigate to it.
+Before using the program you need to calculate embeddings for the dataset. Here is the script for doing it in "scripts" folder. So first navigate to it.
 Then you can use the next script:
 ```bash
 python embeddings_retriever.py \
@@ -46,6 +48,12 @@ However, the program will work correctly if you simply run the script as follows
 ```bash
 python embeddings_retriever.py
 ```
+
+## Additional steps
+To use Hugging Face Inference API, you have to follow the next steps:
+* Create a Hugging Face account
+* Obtain Access Token with "read" role
+* Log in using the command 'huggingface-cli login' in your terminal
 
 ## Usage
 To use the program, you can then just navigate to the "src" folder and run the next script:
