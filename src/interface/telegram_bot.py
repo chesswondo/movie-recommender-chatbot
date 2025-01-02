@@ -34,13 +34,19 @@ class Telegram:
         if "processing" not in context.user_data:
             context.user_data["processing"] = set()
         context.user_data["processing"].add(user_id)
-        
+
+        # Send the "Let me think about it..." message and store its ID
+        thinking_message = await update.message.reply_text("Let me think about it...")
+
         # Processing
-        await update.message.reply_text("Let me think about it...")
         answer = self._generate_answer(user_input).strip()
 
-        # Send the response
+        # Delete the "Let me think about it..." message
+        await thinking_message.delete()
+
+        # Send the final response
         await update.message.reply_text(answer)
 
         # Remove the user from processing
         context.user_data["processing"].remove(user_id)
+
