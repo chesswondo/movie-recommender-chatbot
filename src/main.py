@@ -43,9 +43,11 @@ def main():
     
     # Initialize a prompt for movie postprocessing and the corresponding tool
     prompt = "You're a helpful movie recommender bot and you have the next user query: {user_query}\n\nFirst, analyze this query. \
-Then, based on it, suggest several most appropriate movies from the following list and briefly describe your choice for the user:\n\n{retrieved_movies}. \
-\n\nIn your answer provide all the information that is available to you from the given list, like year, director, genres, link, etc. Don't mention movies that you haven't selected. \
-Choose an easy to understand format. Also, when choosing films, pay attention to their rating. Try not to suggest movies with a low rating if it's not the only appropriate choice.\
+As context you have the following list of movies with information about them:\n\n{retrieved_movies}.\
+\n\nBased on it, your task is to suggest several most suitable movies and briefly describe your choice for the user. \
+First of all, pay attention to the films from the list provided to you. Only if they do not match the user's request, and you know more suitable ones, you can recommend something from yourself. \
+In your answer provide all the information that is available to you from the given list, like year, director, genres, link, etc. Don't mention movies that you haven't selected. \
+Choose an easy to understand format. Also, when choosing films, pay attention to their rating. Try not to suggest movies with a low rating if it's not the only suitable choice.\
 Don't dublicate the user's query, respond in a polite tone, keeping the conversation going, and in the end ask if there is anything else needed.\n\nResponse:"
     movie_postprocessing_tool = PostprocessingTool(prompt_template=prompt, llm_engine=chat_model)
 
@@ -63,7 +65,7 @@ Also you don't have to print here 'task outcome', 'additional context', etc. \
 In 'final_answer' just print your final respond to user in free form, as would a human answer. Don't forget to always add 'Code:' before the code for running a tool! \
 NEVER use other tools than those available to you. Use the minimum required code other than calling available tools. \
 Focus on not making any mistakes when you write python code to use tools, otherwise the task will be failed. Carefully compare the parameters each function takes and the parameters you pass in. \
-Make sure the names and types match. If you are really sure, you can run all tools you want to use in one piece of code.")
+Make sure the names and types match. If you are sure, you can run all tools you want to use in one piece of code.")
     
     agent_run = partial(base_agent_run,
                         agent=agent)

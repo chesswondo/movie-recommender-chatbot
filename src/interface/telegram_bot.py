@@ -3,29 +3,35 @@ from telegram.ext import ContextTypes
 from typing import Callable
 import re
 
-def github_to_telegram_markdown(text: str) -> str:
+def markdown_to_telegram_markdown(text: str) -> str:
     """
     Converts GitHub-flavored Markdown to Telegram-compatible MarkdownV2.
 
-    : param text: (str) - input text in github README format.
+    : param text: (str) - input text in Markdown format.
 
     : return: (str) - output text in MarkDown2 format.
     """
     # Convert italic (*italic* -> _italic_), bold (**bold** -> *bold*)
-    text = re.sub(r"(?<!\*)\*(.*?)\*(?!\*)", r"_\1_", text)
-    text = text.replace("__", "*")
+    text = re.sub(r"(?<!\*)\*(.*?)\*(?!\*)", r"UNDERSCOPE\1UNDERSCOPE", text)
+    text = text.replace("UNDERSCOPEUNDERSCOPE", "ASTERISK")
     
     # Convert links ([text](url) -> Telegram-compatible Markdown)
-    text = re.sub(r"\[(.*?)\]\((.*?)\)", r"[\1](\2)", text)
+    text = re.sub(r"\[(.*?)\]\((.*?)\)", r"LSBRACKET\1RSBRACKETLBRACKET\2RBRACKET", text)
 
     # Convert task lists (- [x] or - [ ] -> - item)
-    text = re.sub(r"- \[(x| )\] (.*)", r"- \2", text)
+    text = re.sub(r"- \[(x| )\] (.*)", r"HYPHEN \2", text)
 
     # Convert headings (# Heading -> Bold text as Telegram does not support headings)
-    text = re.sub(r"^(#+) (.*)", lambda match: f"*{match.group(2)}*", text, flags=re.MULTILINE)
+    text = re.sub(r"^(#+) (.*)", lambda match: f"ASTERISK{match.group(2)}ASTERISK", text, flags=re.MULTILINE)
 
-    # Indicate '(', ')' which are out of link pattern
-    text = re.sub(r"(?<!\])(\(|\))(?!\()", r"\\\1", text)
+    # Handle special symbols
+    text = text.replace("~", "\\~").replace("<", "\\<").replace(">", "\\>").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("`", "\\`")
+    text = text.replace("=", "\\=").replace("|", "\\|").replace("{", "\\{").replace("}", "\\}").replace(".", "\\.").replace("!", "\\!")
+    text = text.replace("*", "\\*").replace("_", "\\_").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]")
+
+    # Handle formatting
+    text = text.replace("ASTERISK", "*").replace("HYPHEN", "-").replace("UNDERSCOPE", "_").replace("LBRACKET", "(")
+    text = text.replace("RBRACKET", ")").replace("LSBRACKET", "[").replace("RSBRACKET", "]")
 
     return text
 
@@ -78,14 +84,16 @@ class Telegram:
         answer = self._generate_answer(user_input).strip()
 
         # Format the response
-        formatted_answer = github_to_telegram_markdown(answer)
-        formatted_answer = formatted_answer.replace("~", "\\~").replace("<", "").replace(">", "").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("=", "\\=").replace("|", "\\|").replace("{", "\\{").replace("}", "\\}").replace(".", "\\.").replace("!", "\\!")
+        formatted_answer = markdown_to_telegram_markdown(answer)
 
         # Delete the temporary message
         await thinking_message.delete()
 
         # Send the final response as MarkdownV2
-        await update.message.reply_text(formatted_answer, parse_mode="MarkdownV2")
+        try:
+            await update.message.reply_text(formatted_answer, parse_mode="MarkdownV2")
+        except Exception:
+            await update.message.reply_text("An error occurred while sending the message. Please repeat your request.")
 
         # Remove the user from processing
         context.user_data["processing"].remove(user_id)
