@@ -1,6 +1,34 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from typing import Callable
+import re
+
+def github_to_telegram_markdown(text: str) -> str:
+    """
+    Converts GitHub-flavored Markdown to Telegram-compatible MarkdownV2.
+
+    : param text: (str) - input text in github README format.
+
+    : return: (str) - output text in MarkDown2 format.
+    """
+    # Convert italic (*italic* -> _italic_), bold (**bold** -> *bold*)
+    text = re.sub(r"(?<!\*)\*(.*?)\*(?!\*)", r"_\1_", text)
+    text = text.replace("__", "*")
+    
+    # Convert links ([text](url) -> Telegram-compatible Markdown)
+    text = re.sub(r"\[(.*?)\]\((.*?)\)", r"[\1](\2)", text)
+
+    # Convert task lists (- [x] or - [ ] -> - item)
+    text = re.sub(r"- \[(x| )\] (.*)", r"- \2", text)
+
+    # Convert headings (# Heading -> Bold text as Telegram does not support headings)
+    text = re.sub(r"^(#+) (.*)", lambda match: f"*{match.group(2)}*", text, flags=re.MULTILINE)
+
+    # Indicate '(', ')' which are out of link pattern
+    text = re.sub(r"(?<!\])(\(|\))(?!\()", r"\\\1", text)
+
+    return text
+
 
 class Telegram:
     """Class for telegram bot behavior."""
@@ -49,11 +77,9 @@ class Telegram:
         # Processing
         answer = self._generate_answer(user_input).strip()
 
-        # Format the response (convert **text** to *text* for MarkdownV2)
-        formatted_answer = answer.replace("**", "*")
-        
-        # Escape other special characters in MarkdownV2
-        formatted_answer = formatted_answer.replace("_", "\\_").replace("[", "\\[").replace("]", "\\]").replace("(", "\\(").replace(")", "\\)").replace("~", "\\~").replace("`", "\\`").replace(">", "\\>").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("=", "\\=").replace("|", "\\|").replace("{", "\\{").replace("}", "\\}").replace(".", "\\.").replace("!", "\\!")
+        # Format the response
+        formatted_answer = github_to_telegram_markdown(answer)
+        formatted_answer = formatted_answer.replace("~", "\\~").replace("<", "").replace(">", "").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("=", "\\=").replace("|", "\\|").replace("{", "\\{").replace("}", "\\}").replace(".", "\\.").replace("!", "\\!")
 
         # Delete the temporary message
         await thinking_message.delete()

@@ -44,7 +44,9 @@ def main():
     # Initialize a prompt for movie postprocessing and the corresponding tool
     prompt = "You're a helpful movie recommender bot and you have the next user query: {user_query}\n\nFirst, analyze this query. \
 Then, based on it, suggest several most appropriate movies from the following list and briefly describe your choice for the user:\n\n{retrieved_movies}. \
-\n\nDon't dublicate the user's query, respond in a polite tone, keeping the conversation going, and in the end ask if there is anything else needed.\n\nResponse:"
+\n\nIn your answer provide all the information that is available to you from the given list, like year, director, genres, link, etc. Don't mention movies that you haven't selected. \
+Choose an easy to understand format. Also, when choosing films, pay attention to their rating. Try not to suggest movies with a low rating if it's not the only appropriate choice.\
+Don't dublicate the user's query, respond in a polite tone, keeping the conversation going, and in the end ask if there is anything else needed.\n\nResponse:"
     movie_postprocessing_tool = PostprocessingTool(prompt_template=prompt, llm_engine=chat_model)
 
     # Initialize the main agent and a corresponding running function

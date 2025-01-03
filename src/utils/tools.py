@@ -50,15 +50,17 @@ Use the affirmative form rather than a question."
                                user_input=query,
                                top_n=self._top_n)
         
-        movie_summaries = "\n\n".join([f"{row['title']}: {row['overview']}" for _, row in movies.iterrows()])
+        movie_summaries = "\n\n".join([f"Movie title: {row['title']}, director: {row['director']}, year: {row['year']}, \
+rating: {row['rating']}, genres: {row['genres']}, description: {row['overview']}, link: {'imdb.com'+row['path']}" for _, row in movies.iterrows()])
+        
         return movie_summaries
     
 
 class PostprocessingTool(Tool):
     name = "movie_postprocessing"
-    description = "Selects the most appropriate movies from a list with descriptions retrieved by the movie_retriever tool. \
-Takes the retrieved movies with their descriptions and user query as input and outputs a final recommendation. Always use it when you have a raw list of possible movies. \
-If you decide to use this tool, immediately use its result as an argument in final_answer, do not take intermediate steps."
+    description = "Selects the most appropriate movies from a list with descriptions and other information retrieved by the movie_retriever tool. \
+Takes the retrieved movies with information about them and user query as input, and outputs a final recommendation. Always use it when you have a raw list of possible movies. \
+If you decide to use this tool, always immediately use its result as an argument in final_answer tool, do not take intermediate steps, it's important."
 
     inputs = {
         "query": {
@@ -68,9 +70,9 @@ semantically close to the target movies descriptions. Use the affirmative form r
         },
         "retrieved_movies": {
             "type": "string",
-            "description": "It must be a single string which contains a list of retrieved movies and their descriptions. \
-After every movie it MUST be a brief description of what happens in this movie. \
-This string should not contain any additional information. Do not use your own observations, use only information from the tool you've got before."
+            "description": "It must be a single string which contains a list of retrieved movies and information about them. \
+After every movie it MUST be a brief description of what happens in this movie, and other information. \
+Do not use your own observations, use only information from the tool you've got before."
         }}
     output_type = "string"
     
