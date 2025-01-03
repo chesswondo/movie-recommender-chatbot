@@ -1,40 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from typing import Callable
-import re
-
-def markdown_to_telegram_markdown(text: str) -> str:
-    """
-    Converts GitHub-flavored Markdown to Telegram-compatible MarkdownV2.
-
-    : param text: (str) - input text in Markdown format.
-
-    : return: (str) - output text in MarkDown2 format.
-    """
-    # Convert italic (*italic* -> _italic_), bold (**bold** -> *bold*)
-    text = re.sub(r"(?<!\*)\*(.*?)\*(?!\*)", r"UNDERSCOPE\1UNDERSCOPE", text)
-    text = text.replace("UNDERSCOPEUNDERSCOPE", "ASTERISK")
-    
-    # Convert links ([text](url) -> Telegram-compatible Markdown)
-    text = re.sub(r"\[(.*?)\]\((.*?)\)", r"LSBRACKET\1RSBRACKETLBRACKET\2RBRACKET", text)
-
-    # Convert task lists (- [x] or - [ ] -> - item)
-    text = re.sub(r"- \[(x| )\] (.*)", r"HYPHEN \2", text)
-
-    # Convert headings (# Heading -> Bold text as Telegram does not support headings)
-    text = re.sub(r"^(#+) (.*)", lambda match: f"ASTERISK{match.group(2)}ASTERISK", text, flags=re.MULTILINE)
-
-    # Handle special symbols
-    text = text.replace("~", "\\~").replace("<", "\\<").replace(">", "\\>").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("`", "\\`")
-    text = text.replace("=", "\\=").replace("|", "\\|").replace("{", "\\{").replace("}", "\\}").replace(".", "\\.").replace("!", "\\!")
-    text = text.replace("*", "\\*").replace("_", "\\_").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]")
-
-    # Handle formatting
-    text = text.replace("ASTERISK", "*").replace("HYPHEN", "-").replace("UNDERSCOPE", "_").replace("LBRACKET", "(")
-    text = text.replace("RBRACKET", ")").replace("LSBRACKET", "[").replace("RSBRACKET", "]")
-
-    return text
-
+from utils.telegram_utils import markdown_to_telegram_markdown
 
 class Telegram:
     """Class for telegram bot behavior."""
