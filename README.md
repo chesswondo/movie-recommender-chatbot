@@ -1,4 +1,4 @@
-# Movie Recommender RAG Agent
+# Movie Recommendation RAG Agent
 
 ## About
 Here is an implementation of a an RAG LLM Agent which can recommend you a movie based on your query.
