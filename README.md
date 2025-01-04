@@ -1,14 +1,14 @@
-# Movie Recommender Agent
+# Movie Recommender RAG Agent
 
 ## About
-Here is an implementation of a an LLM Agent which can recommend you a movie based on your query.
+Here is an implementation of a an RAG LLM Agent which can recommend you a movie based on your query.
 You can run this movie recommender agent both as a local window application and as a telegram bot using webhooks.
 
-Currently it uses mistralai's [Mistral-Nemo-Instruct-2407](https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407) as a main model for text generation.
+Currently it uses mistralai's [Mistral-Nemo-Instruct-2407](https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407) as a main language model for text generation.
 On average it takes less than a minute to get a response using Hugging Face Inference API.
 
 The agent can both maintain communication and recommend movies based on your description.
-It takes your input, retrieves all important information, then selects some movies
+It takes your input, retrieves all important information, then selects some movies (if you asked it for a recommendation)
 from Kaggle IMDB dataset using precalculated vector embeddings, analyzes them and finally gives you a short recommendation.
 
 As a sentence transformer model currently we use [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2).
