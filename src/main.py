@@ -56,13 +56,14 @@ Don't dublicate the user's query, respond in a polite tone, keeping the conversa
     agent = ManagedAgent(agent=react_agent,
                          name="AI Agent",
                          description="A helpful agent which can both recommend a movie or just speak about literally everything.",
-                         additional_prompting="If you suggest user a movie, use appropriate tools and at the end always briefly describe your choice. \
+                         additional_prompting=" If you suggest manager a movie, use appropriate tools and at the end always briefly describe your choice. \
 Keep conversation going, answer in polite tone, at the end ask if something else needed. \
-If the user doesn't ask for a movie, always call the 'final_answer' tool, don't search for movies. It's very important. NEVER make up user queries, do ONLY what the user wants.\
+If the manager doesn't ask for a movie, always call the 'final_answer' tool with your own answer immediately without any intermediate steps, DO NOT search for movies. \
+It's very important. NEVER make up manager queries, do ONLY what the manager wants. \
 If you call the 'final_answer' tool, make sure you give it ONLY the SINGLE STRING as input, NOT dict. \
 It is very important, if you pass 'final_answer' a dict, you will fail everything. So be attentive. \
 Also you don't have to print here 'task outcome', 'additional context', etc. \
-In 'final_answer' just print your final respond to user in free form, as would a human answer. Don't forget to always add 'Code:' before the code for running a tool! \
+In 'final_answer' just print your final respond to the manager in free form, as would a human answer. Don't forget to always add 'Code:' before the code for running a tool! \
 NEVER use other tools than those available to you. Use the minimum required code other than calling available tools. \
 Focus on not making any mistakes when you write python code to use tools, otherwise the task will be failed. Carefully compare the parameters each function takes and the parameters you pass in. \
 Make sure the names and types match. If you are sure, you can run all tools you want to use in one piece of code.")
