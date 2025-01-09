@@ -1,10 +1,3 @@
-from language_models.text_generation_llm import CustomLLM
-from language_models.sentence_similarity_model import EmbeddingModel
-from interface.telegram_bot import Telegram
-from utils.tools import MovieRetrieverTool, PostprocessingTool
-from utils.common_utils import load_config, set_device
-from utils.llm_utils import base_agent_run
-from interface.window import ChatWindow
 from transformers import ReactCodeAgent
 from transformers import ManagedAgent
 from telegram.ext import CommandHandler, MessageHandler, filters, Application
@@ -13,6 +6,14 @@ import tkinter as tk
 from functools import partial
 from dotenv import load_dotenv
 import os
+
+from language_models.text_generation_llm import CustomLLM
+from language_models.sentence_similarity_model import EmbeddingModel
+from interface.telegram_bot import Telegram
+from interface.window import ChatWindow
+from utils.tools import MovieRetrieverTool, PostprocessingTool
+from utils.common_utils import load_config, set_device
+from utils.llm_utils import base_agent_run
 
 def main():
     # Load configuration files
@@ -83,7 +84,7 @@ Make sure the names and types match. If you are sure, you can run all tools you 
         telegram_config = load_config("../configs/telegram/main.json")
 
         # Build the telegram bot
-        telegram_bot = Telegram(generate_answer=agent_run)
+        telegram_bot = Telegram(config=telegram_config, generate_answer=agent_run)
         application = Application.builder().token(API_TOKEN).build()
         application.add_handler(CommandHandler('start', telegram_bot.start))
         application.add_handler(CommandHandler('help', telegram_bot.help_command))

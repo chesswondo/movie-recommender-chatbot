@@ -1,7 +1,9 @@
 from transformers.agents.llm_engine import MessageRole
 from transformers.agents.llm_engine import HfApiEngine
 from typing import Any
-from utils.llm_utils import extract_text, extract_user_bot_pairs
+
+from utils.llm_utils import extract_text, extract_role_pairs
+from utils.telegram_utils import SpecialSymbol
 
 class CustomLLM:
     """Class for working with LLMs using Hugging Face API."""
@@ -37,11 +39,12 @@ class CustomLLM:
                 raise TypeError(f"Input messages must be either list or str, however got {message_type}.")
         
         else:
-            if len(messages) == 2 and messages[0]['role']==MessageRole.SYSTEM:
-                context, current_message = extract_text(messages[-1]['content'], "--START--", "--END--")
+            # Retrieve context during first call
+            if len(messages) == 2 and messages[0]['role'] == MessageRole.SYSTEM:
+                context, current_message = extract_text(messages[-1]['content'], SpecialSymbol.START_CONTEXT.value, SpecialSymbol.END_CONTEXT.value)
                 messages = messages[:-1]
-                for msg in extract_user_bot_pairs(context):
-                    role = MessageRole.USER if msg[0] == 'user' else MessageRole.ASSISTANT
+                for msg in extract_role_pairs(input_string=context, role1=SpecialSymbol.USER.value, role2=SpecialSymbol.BOT.value):
+                    role = MessageRole.USER if msg[0] == SpecialSymbol.USER.value else MessageRole.ASSISTANT
                     messages.append({'role': role, 'content': msg[1]})
                 messages.append({'role': MessageRole.USER, 'content': current_message})
 

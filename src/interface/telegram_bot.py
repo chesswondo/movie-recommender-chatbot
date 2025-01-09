@@ -1,20 +1,23 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from typing import Callable
-from utils.telegram_utils import markdown_to_telegram_markdown
 from collections import deque
+
+from utils.telegram_utils import SpecialSymbol, markdown_to_telegram_markdown 
 
 class Telegram:
     """Class for telegram bot behavior."""
 
-    def __init__(self, generate_answer: Callable[[str], str]) -> None:
+    def __init__(self, config: dict, generate_answer: Callable[[str], str]) -> None:
         """
         Initializes an instance of Telegram.
 
+        : param config; (dict) - a telegram configuration file.
         : param generate_answer: (Callable[[str], str]) - answer generation function which takes string input and returns another string.
 
         : return: (None) - this function does not return any value.
         """
+        self._config = config
         self._generate_answer = generate_answer
 
     # Start command (/start)
@@ -37,10 +40,10 @@ class Telegram:
 
         # Initialize user message history if it doesn't exist
         if "message_history" not in context.user_data:
-            context.user_data["message_history"] = deque(maxlen=10)  # Store the last 10 messages (5 user, 5 bot)
+            context.user_data["message_history"] = deque(maxlen=self._config["n_context_messages"])
 
         # Add the current user message to history
-        context.user_data["message_history"].append(("user", user_input))
+        context.user_data["message_history"].append((SpecialSymbol.USER.value, user_input))
 
         # Ignore other inputs from the same user during processing
         if user_id in context.user_data.get("processing", set()):
@@ -60,13 +63,13 @@ class Telegram:
         last_messages = ""
         for msg in memory[:-1]:
             last_messages += msg[0] + ": " + msg[1] + "\n"
-        user_input = "--START--\n" + last_messages + "--END--" + user_input
+        user_input = SpecialSymbol.START_CONTEXT.value + last_messages + SpecialSymbol.END_CONTEXT.value + user_input
 
         # Processing
         answer = self._generate_answer(user_input).strip()
 
         # Add bot's response to message history
-        context.user_data["message_history"].append(("bot", answer))
+        context.user_data["message_history"].append((SpecialSymbol.BOT.value, answer))
 
         # Format the response
         formatted_answer = markdown_to_telegram_markdown(answer)

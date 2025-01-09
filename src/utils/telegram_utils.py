@@ -1,18 +1,24 @@
 import re
 from enum import Enum
 
-class SpecialCharacter(str, Enum):
+class SpecialSymbol(str, Enum):
     """
-    Enumeration for some of telegram markdown special characters.
+    Enumeration for some special symbols in telegram messages.
 
     Possible values:
-    - SpecialCharacter.UNDERSCOPE: "UNDERSCOPE"
-    - SpecialCharacter.ASTERISC: "ASTERISC"
-    - SpecialCharacter.HYPHEN: "HYPHEN"
-    - SpecialCharacter.LEFT_BRACKET: "LBRACKET"
-    - SpecialCharacter.RIGHT_BRACKET: "RBRACKET"
-    - SpecialCharacter.LEFT_SQUARE_BRACKET: "LSBRACKET"
-    - SpecialCharacter.RIGHT_SQUARE_BRACKET: "RSBRACKET"
+    1. For telegram markdown characters:
+        - SpecialSymbol.UNDERSCOPE: "UNDERSCOPE"
+        - SpecialSymbol.ASTERISC: "ASTERISC"
+        - SpecialSymbol.HYPHEN: "HYPHEN"
+        - SpecialSymbol.LEFT_BRACKET: "LBRACKET"
+        - SpecialSymbol.RIGHT_BRACKET: "RBRACKET"
+        - SpecialSymbol.LEFT_SQUARE_BRACKET: "LSBRACKET"
+        - SpecialSymbol.RIGHT_SQUARE_BRACKET: "RSBRACKET"
+    2. Other symbols:
+        - SpecialSymbol.START_CONTEXT: "--START--"
+        - SpecialSymbol.END_CONTEXT: "--END--"
+        - SpecialSymbol.USER: "USER"
+        - SpecialSymbol.BOT: "BOT"
     """
 
     UNDERSCOPE = "UNDERSCOPE"
@@ -22,6 +28,11 @@ class SpecialCharacter(str, Enum):
     RIGHT_BRACKET = "RBRACKET"
     LEFT_SQUARE_BRACKET = "LSBRACKET"
     RIGHT_SQUARE_BRACKET = "RSBRACKET"
+
+    START_CONTEXT = "--START--"
+    END_CONTEXT = "--END--"
+    USER = "USER"
+    BOT = "BOT"
 
     def __eq__(self, other):
         return self.value == other
@@ -37,19 +48,19 @@ def markdown_to_telegram_markdown(text: str) -> str:
     : return: (str) - output text in MarkDown2 format.
     """
     # Convert italic (*italic* -> _italic_), bold (**bold** -> *bold*)
-    text = re.sub(r"(?<!\*)\*(.*?)\*(?!\*)", lambda m: f"{SpecialCharacter.UNDERSCOPE.value}{m.group(1)}{SpecialCharacter.UNDERSCOPE.value}", text)
-    text = text.replace(f"{SpecialCharacter.UNDERSCOPE.value}{SpecialCharacter.UNDERSCOPE.value}", f"{SpecialCharacter.ASTERISC.value}")
+    text = re.sub(r"(?<!\*)\*(.*?)\*(?!\*)", lambda m: f"{SpecialSymbol.UNDERSCOPE.value}{m.group(1)}{SpecialSymbol.UNDERSCOPE.value}", text)
+    text = text.replace(f"{SpecialSymbol.UNDERSCOPE.value}{SpecialSymbol.UNDERSCOPE.value}", f"{SpecialSymbol.ASTERISC.value}")
     
     # Convert links ([text](url) -> Telegram-compatible Markdown)
     text = re.sub(r"\[(.*?)\]\((.*?)\)",
-                  lambda m: f"{SpecialCharacter.LEFT_SQUARE_BRACKET.value}{m.group(1)}{SpecialCharacter.RIGHT_SQUARE_BRACKET.value}"
-                            f"{SpecialCharacter.LEFT_BRACKET.value}{m.group(2)}{SpecialCharacter.RIGHT_BRACKET.value}", text)
+                  lambda m: f"{SpecialSymbol.LEFT_SQUARE_BRACKET.value}{m.group(1)}{SpecialSymbol.RIGHT_SQUARE_BRACKET.value}"
+                            f"{SpecialSymbol.LEFT_BRACKET.value}{m.group(2)}{SpecialSymbol.RIGHT_BRACKET.value}", text)
 
     # Convert task lists (- [x] or - [ ] -> - item)
-    text = re.sub(r"- \[(x| )\] (.*)", lambda m: f"{SpecialCharacter.HYPHEN.value} {m.group(2)}", text)
+    text = re.sub(r"- \[(x| )\] (.*)", lambda m: f"{SpecialSymbol.HYPHEN.value} {m.group(2)}", text)
 
     # Convert headings (# Heading -> Bold text as Telegram does not support headings)
-    text = re.sub(r"^(#+) (.*)", lambda match: f"{SpecialCharacter.ASTERISC.value}{match.group(2)}{SpecialCharacter.ASTERISC.value}", text, flags=re.MULTILINE)
+    text = re.sub(r"^(#+) (.*)", lambda match: f"{SpecialSymbol.ASTERISC.value}{match.group(2)}{SpecialSymbol.ASTERISC.value}", text, flags=re.MULTILINE)
 
     # Handle special symbols
     text = text.replace("~", "\\~").replace("<", "\\<").replace(">", "\\>").replace("#", "\\#").replace("+", "\\+").replace("-", "\\-").replace("`", "\\`")
@@ -57,8 +68,8 @@ def markdown_to_telegram_markdown(text: str) -> str:
     text = text.replace("*", "\\*").replace("_", "\\_").replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]")
 
     # Handle formatting
-    text = text.replace(SpecialCharacter.ASTERISC.value, "*").replace(SpecialCharacter.HYPHEN.value, "-").replace(SpecialCharacter.UNDERSCOPE.value, "_")
-    text = text.replace(SpecialCharacter.LEFT_BRACKET.value, "(").replace(SpecialCharacter.RIGHT_BRACKET.value, ")")
-    text = text.replace(SpecialCharacter.LEFT_SQUARE_BRACKET.value, "[").replace(SpecialCharacter.RIGHT_SQUARE_BRACKET.value, "]")
+    text = text.replace(SpecialSymbol.ASTERISC.value, "*").replace(SpecialSymbol.HYPHEN.value, "-").replace(SpecialSymbol.UNDERSCOPE.value, "_")
+    text = text.replace(SpecialSymbol.LEFT_BRACKET.value, "(").replace(SpecialSymbol.RIGHT_BRACKET.value, ")")
+    text = text.replace(SpecialSymbol.LEFT_SQUARE_BRACKET.value, "[").replace(SpecialSymbol.RIGHT_SQUARE_BRACKET.value, "]")
 
     return text

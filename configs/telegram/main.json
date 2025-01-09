@@ -1,3 +1,4 @@
 {
-    "port": 8443
+    "port": 8443,
+    "n_context_messages": 10
 }

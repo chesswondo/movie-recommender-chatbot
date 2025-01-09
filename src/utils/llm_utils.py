@@ -13,20 +13,20 @@ def base_agent_run(user_input: str,
     """
     return agent(user_input)
 
-def extract_text(input_string: str, substring1: str, substring2: str) -> tuple:
+def extract_text(input_string: str,
+                 substring1: str,
+                 substring2: str) -> tuple[str, str]:
     """
     Extracts text between two substrings and the combined text from before the first
     substring and after the second substring.
 
-    Args:
-        input_string (str): The input string to search within.
-        substring1 (str): The first substring.
-        substring2 (str): The second substring.
+    : param input_string: (str) - the input string to search within.
+    : param substring1: (str) - the first substring.
+    : param substring2: (str) - the second substring.
 
-    Returns:
-        tuple: A tuple containing:
-            - The text between the two substrings.
-            - The combined text of everything before the first substring and after the second substring.
+    : return: (tuple) - a tuple containing:
+        - the text between the two substrings
+        - the combined text of everything before the first substring and after the second substring
     """
     try:
         # Find the start and end indices of the substrings
@@ -48,21 +48,23 @@ def extract_text(input_string: str, substring1: str, substring2: str) -> tuple:
         return f"Error: {str(e)}", None
 
 
-def extract_user_bot_pairs(input_string: str) -> list:
+def extract_role_pairs(input_string: str,
+                       role1: str,
+                       role2: str) -> list[tuple]:
     """
-    Extracts all "user: " and "bot: " substrings along with their respective texts
+    Extracts all substrings with the specified roles and their associated texts
     and returns them as a list of tuples.
 
-    Args:
-        input_string (str): The input string containing "user: " and "bot: ".
+    : param input_string: (str) - the input string containing the role identifiers and associated texts.
+    : param role1: (str) - the first role identifier (e.g., "user").
+    : param role2: (str) - the second role identifier (e.g., "bot").
 
-    Returns:
-        list: A list of tuples, each containing:
-            - "user" or "bot" (str)
-            - The associated text (str)
+    : return: (list) - a list of tuples, each containing:
+        - role1 or role2 (str)
+        - the associated text (str)
     """
-    # Define a regular expression to match "user: " or "bot: " and their associated text
-    pattern = r'(user|bot): (.*?)((?=user: )|(?=bot: )|$)'
+    # Define a regular expression to match the roles and their associated text
+    pattern = rf'({re.escape(role1)}|{re.escape(role2)}): (.*?)((?={re.escape(role1)}: )|(?={re.escape(role2)}: )|$)'
     matches = re.findall(pattern, input_string, re.DOTALL)
 
     # Convert matches into a list of tuples with desired format

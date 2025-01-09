@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-import hnswlib  # for vector search
+import hnswlib
+
 from language_models.sentence_similarity_model import EmbeddingModel
 
 def select_movies(movie_df: pd.DataFrame,

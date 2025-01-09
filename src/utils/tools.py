@@ -1,8 +1,9 @@
 import pandas as pd
 from transformers.agents import Tool
+
 from language_models.sentence_similarity_model import EmbeddingModel
-from utils.embedding_utils import select_movies
 from language_models.text_generation_llm import CustomLLM
+from utils.embedding_utils import select_movies
 
 class MovieRetrieverTool(Tool):
     name = "movie_retriever"
