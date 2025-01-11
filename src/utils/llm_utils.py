@@ -70,3 +70,22 @@ def extract_role_pairs(input_string: str,
     # Convert matches into a list of tuples with desired format
     result = [(match[0], match[1].strip()) for match in matches]
     return result
+
+def read_prompt(file_path: str) -> str:
+    """
+    Processes the prompt from given text file.
+    
+    : param file_path: (str) - path to the text file.
+    
+    : return: (str) - processed prompt as a Python string.
+    """
+    with open(file_path, "r") as file:
+        content = file.read()
+    
+    # Replace real newlines with spaces
+    content = content.replace("\n", " ")
+
+    # Replace literal '\n' with actual newlines
+    content = content.replace("\\n", "\n")
+    
+    return content

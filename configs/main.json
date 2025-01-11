@@ -1,5 +1,9 @@
 {
     "dataset_path": "../data/IMDB_embeddings.pkl",
     "n_movies_to_select": 10,
-    "run_as_telegram_bot": true
+    "run_as_telegram_bot": true,
+    "prompts": {
+        "main_agent_prompt": "../prompts/main_agent_prompt.txt",
+        "postprocessing_prompt": "../prompts/postprocessing_prompt.txt"
+    }
 }
