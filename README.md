@@ -16,7 +16,7 @@ If you want to use an another model, don't forget to recalculate all embeddings 
 
 ### Note:
 
-**The agent is a bit raw at the moment, but is being actively developed. There are plans to add chat memory and make some other changes.**
+**Currently, the agent supports context memory when running as a telegram bot. When launched via a window interface, each message is processed separately.**
 
 ## Installation
 #### 1. Clone the repository:
